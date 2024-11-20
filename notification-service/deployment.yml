@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-db
+  labels:
+    app: redis-db
+spec:
+  selector:
+    matchLabels:
+      app: redis-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-db
+    spec:
+      containers:
+        - name: redis-db-dep
+          image: redis
+          imagePullPolicy: IfNotPresent
+          ports :
+            - protocol: TCP
+              containerPort: 6379
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification-service
+spec:
+  selector:
+    matchLabels:
+      app: notification-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: notification-service
+          imagePullPolicy: Always
+          ports:
+            - protocol: TCP
+              containerPort: 8080

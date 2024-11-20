@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: shipment-tracker
+  flyway:
+    locations: classpath:/db/migration
+    schemas: shipment-tracker
+    baselineOnMigrate: true
+    enabled: true
+    hibernate:
+      ddl-auto: update
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+database-details:
+  driver-class-name: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/shipment-tracker
+  userName: postgres
+  password: sourabh
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
+
