@@ -15,5 +15,6 @@ public class NotificationMessage {
     private String emailId;
     private String phoneNumber;
     private Integer priority;
+    private String medium;
 
 }
