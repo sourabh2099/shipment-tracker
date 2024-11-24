@@ -1,6 +1,17 @@
 spring:
   application:
     name: notification-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: chowdhurysourabh58@gmail.com
+    password: '{cipher}ed27103f786aed516eba1027db1b20755f49542d64b2258a8d1de8356682cdf8a21172fa480f56f21f3789c284aaac07'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 config:
   redis:
