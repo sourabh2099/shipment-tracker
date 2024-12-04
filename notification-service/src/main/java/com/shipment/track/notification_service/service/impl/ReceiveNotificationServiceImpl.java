@@ -51,7 +51,6 @@ public class ReceiveNotificationServiceImpl implements ReceiveNotification {
 
     private static void sleep() throws InterruptedException {
         LOG.info("Putting thread to sleep at {}", LocalDateTime.now());
-        Thread.sleep(10000);
     }
 
 
