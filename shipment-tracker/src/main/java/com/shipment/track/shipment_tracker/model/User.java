@@ -30,5 +30,4 @@ public class User extends DataTime {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-
 }

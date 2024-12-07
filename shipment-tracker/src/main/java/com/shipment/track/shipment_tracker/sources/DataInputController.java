@@ -49,6 +49,13 @@ public class DataInputController {
 //
 //    }
 
+    @PatchMapping("/update-shipment-status-from-ordinal-to-string")
+    public ResponseEntity<?> updateShipmentStatus(){
+        crudOperations.updateShipmentDetailsWithOrdinalData();
+        return ResponseEntity.ok("");
+    }
+
+
 
     @GetMapping("/get-all-users")
     public ResponseEntity<?> getUsers() {

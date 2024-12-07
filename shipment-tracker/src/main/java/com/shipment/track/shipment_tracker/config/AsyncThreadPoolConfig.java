@@ -1,5 +1,6 @@
 package com.shipment.track.shipment_tracker.config;
 
+import com.shipment.track.shipment_tracker.config.data.AsyncThreadPoolConfigData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncThreadPoolConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(com.shipment.track.shipment_tracker.config.data.AsyncThreadPoolConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncThreadPoolConfigData.class);
 
     @Bean
     public ThreadPoolTaskExecutor taskExecutor() {

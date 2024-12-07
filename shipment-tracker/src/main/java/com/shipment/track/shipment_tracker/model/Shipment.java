@@ -26,6 +26,7 @@ public class Shipment {
     private Address destinationAddress;
 
     @Column(name = "shipment_status")
+    @Enumerated(EnumType.STRING)
     private ShipmentStatus shipmentStatus;
 
     @ManyToOne()

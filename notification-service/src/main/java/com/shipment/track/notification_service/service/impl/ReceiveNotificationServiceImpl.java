@@ -20,6 +20,7 @@ public class ReceiveNotificationServiceImpl implements ReceiveNotification {
     volatile Queue<NotificationMessage> pollingQueue = MessageQueue.getInstance().getNotificationQueue();
     private final static Logger LOG = LoggerFactory.getLogger(ReceiveNotificationServiceImpl.class);
     private final static ExecutorService es = Executors.newSingleThreadExecutor();
+
     @PostConstruct
     public void startPolling(){
         LOG.info("Starting to receive requests ");

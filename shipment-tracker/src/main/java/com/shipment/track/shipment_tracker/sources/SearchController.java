@@ -24,4 +24,10 @@ public class SearchController {
         return ResponseEntity.of(searchOperations.getTrackingDetails(Long.parseLong(trackingId)));
 
     }
+    @GetMapping("/all-tracking-details")
+    public ResponseEntity<?> getAlltrackingDetails(){
+        LOG.info("Find all the available tracking details !!");
+        return ResponseEntity.ok(searchOperations.getAllTrackingDetails());
+    }
+
 }

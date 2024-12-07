@@ -9,6 +9,8 @@ spring:
     hibernate:
       ddl-auto: update
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -25,4 +27,12 @@ logging:
       hibernate:
         SQL: DEBUG
         type: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    show-details: always
 
