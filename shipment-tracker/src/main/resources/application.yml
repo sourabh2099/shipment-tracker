@@ -36,3 +36,9 @@ management:
   health:
     show-details: always
 
+application:
+  security:
+    jwt:
+      jwt-secret-key: secretkey
+      jwt-expiration-time: 600000  #10 min
+
