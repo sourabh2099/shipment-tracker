@@ -24,9 +24,9 @@ database-details:
 logging:
   level:
     org:
-      hibernate:
-        SQL: DEBUG
-        type: TRACE
+      springframework:
+          security: TRACE
+          web: DEBUG
 
 management:
   endpoints:
@@ -39,6 +39,6 @@ management:
 application:
   security:
     jwt:
-      jwt-secret-key: secretkey
-      jwt-expiration-time: 600000  #10 min
+      jwt-secret-key: afe65bcd93be0f27d04415f68b9b6ca33f909553ad54c3966cd719a7e44606c1
+      jwt-expiration-time: 6000000  #100 min
 

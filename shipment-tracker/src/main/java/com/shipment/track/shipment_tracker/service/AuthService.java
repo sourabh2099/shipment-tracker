@@ -4,15 +4,19 @@ import com.shipment.track.shipment_tracker.config.data.JwtTokenConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+@Component
 public class AuthService {
     public static final String ISS = "Custom Jwt Builder";
     @Autowired
@@ -29,15 +33,14 @@ public class AuthService {
     }
 
     public String buildToken(Map<String, Object> extraClaims,
-                             UserDetails userDetails,
-                             Long expiration) {
+                             UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setIssuedAt(new Date(Instant.now().toEpochMilli()))
                 .setSubject(userDetails.getUsername())
                 .setIssuer(ISS)
                 .setExpiration(new Date(Instant.now().toEpochMilli() + jwtTokenConfig.getJwtExpirationTime()))
-                .signWith(SignatureAlgorithm.HS256, jwtTokenConfig.getJwtSecretKey().getBytes())
+                .signWith(SignatureAlgorithm.HS256, getSignInKey())
                 .compact();
     }
 
@@ -52,9 +55,15 @@ public class AuthService {
 
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .build().parseClaimsJwt(token)
+        return  Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
+    }
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtTokenConfig.getJwtSecretKey());
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 }

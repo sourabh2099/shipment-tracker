@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Objects;
-
+@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
@@ -43,6 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try{
             if(userName != null && authentication == null){ // this means that the authentication object was not initialized before
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+                log.info("Filter : {}",userDetails.getAuthorities());
                 if(authService.isTokenValid(jwt)){
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
@@ -52,8 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
+            log.info("Is Authenticated ? {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
             filterChain.doFilter(request,response);
         }catch (Exception e){
+            log.error("Found error in JwtAuthentication filter ",e);
             handlerExceptionResolver.resolveException(request,
                     response,
                     null,e);

@@ -1,11 +1,10 @@
 package com.shipment.track.shipment_tracker.listener;
 
-import com.shipment.track.shipment_tracker.enums.AddressType;
 import com.shipment.track.shipment_tracker.enums.DeliveryStatus;
 import com.shipment.track.shipment_tracker.enums.ShipmentStatus;
 import com.shipment.track.shipment_tracker.events.CreateShipmentsForUserEvent;
-import com.shipment.track.shipment_tracker.model.*;
 import com.shipment.track.shipment_tracker.model.Package;
+import com.shipment.track.shipment_tracker.model.*;
 import com.shipment.track.shipment_tracker.repository.PackageRepository;
 import com.shipment.track.shipment_tracker.repository.ShipmentRepository;
 import com.shipment.track.shipment_tracker.repository.TrackingDetailsRepository;

@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class CrudOperationsImpl implements CrudOperations {
     private static final Logger LOG = LoggerFactory.getLogger(CrudOperationsImpl.class);
     private final UserRepository userRepository;
     private final ShipmentRepository shipmentRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -38,7 +41,7 @@ public class CrudOperationsImpl implements CrudOperations {
         User user = User.builder()
                 .email(createUserDto.getEmail())
                 .name(createUserDto.getFullName())
-                .password(createUserDto.getPassword())
+                .password(passwordEncoder.encode(createUserDto.getPassword()))
                 .build();
         LOG.info("Saving user Into Db {}", user);
         return userRepository.save(user);

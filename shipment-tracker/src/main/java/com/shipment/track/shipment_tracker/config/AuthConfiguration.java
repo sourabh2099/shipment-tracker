@@ -1,6 +1,7 @@
 package com.shipment.track.shipment_tracker.config;
 
 import com.shipment.track.shipment_tracker.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+@Slf4j
 @Configuration
 public class AuthConfiguration {
     private final UserRepository userRepository;
@@ -20,22 +21,26 @@ public class AuthConfiguration {
     }
 
     @Bean
-    UserDetailsService userDetailsService(){
-        return username -> userRepository.findByEmail(username).orElseThrow(() ->
-                new UsernameNotFoundException("UserName not found for user " + username));
+    UserDetailsService userDetailsService() {
+        return username -> {
+            log.info("Queried Using userName {}",username);
+            return userRepository.findByEmail(username).orElseThrow(() ->
+                    new UsernameNotFoundException("UserName not found for user " + username));
+        };
     }
 
     @Bean
-    BCryptPasswordEncoder passwordEncoder(){
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    AuthenticationProvider authenticationProvider(){
+    AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
