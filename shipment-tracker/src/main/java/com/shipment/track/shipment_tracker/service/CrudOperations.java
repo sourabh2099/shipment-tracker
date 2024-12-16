@@ -9,5 +9,5 @@ import java.util.List;
 public interface CrudOperations {
     User createUser(CreateUserDto user);
     List<User> getAllUsers();
-    void updateShipmentDetailsWithOrdinalData();
+    void updateShipmentStatusOnDelay();
 }
