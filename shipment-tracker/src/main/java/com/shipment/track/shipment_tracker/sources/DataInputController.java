@@ -2,9 +2,11 @@ package com.shipment.track.shipment_tracker.sources;
 
 import com.shipment.track.shipment_tracker.events.CreateShipmentsForUserEvent;
 import com.shipment.track.shipment_tracker.model.User;
-import com.shipment.track.shipment_tracker.pojo.AddressDto;
-import com.shipment.track.shipment_tracker.pojo.CreateUserDto;
-import com.shipment.track.shipment_tracker.pojo.error.ErrorResponse;
+import com.shipment.track.shipment_tracker_pojo.pojo.AddressDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.CreateUserDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.CreateAddressDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.CreateShipmentDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.error.ErrorResponse;
 import com.shipment.track.shipment_tracker.service.CrudOperations;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -18,12 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1")
 public class DataInputController {
+
     @Autowired
     private CrudOperations crudOperations;
     @Autowired
@@ -39,19 +44,22 @@ public class DataInputController {
         }
         User user = crudOperations.createUser(createUserDto);
         //event triggered to create shipments for the given user
-        applicationEventPublisher.publishEvent(new CreateShipmentsForUserEvent(this, user));
-
+        //applicationEventPublisher.publishEvent(new CreateShipmentsForUserEvent(this, user));
         return ResponseEntity.ok(user);
     }
     // todo to create shipment for user return the tracking id as a part of shipment addition and address Id
-//    @PostMapping("/create-shipment-for-user/{userId}")
-//    public ResponseEntity<?> createShipment(){
-//
-//    }
 
-    @PatchMapping("/update-shipment-status-from-ordinal-to-string")
-    public ResponseEntity<?> updateShipmentStatus(){
-        crudOperations.updateShipmentStatusOnDelay();
+    @PostMapping("/create-shipment")
+    public ResponseEntity<?> createShipmentForUser(@RequestBody CreateShipmentDto createShipmentDto)
+            throws URISyntaxException {
+        LOG.info("Got Request to create shipment for user {}",createShipmentDto);
+        crudOperations.createShipment(createShipmentDto);
+        return ResponseEntity.created(new URI("/create-shipment")).body("");
+    }
+
+    @PostMapping("/add-address-for-user")
+    public ResponseEntity<?> addAddressForUser(@RequestBody CreateAddressDto createAddressDto){
+        crudOperations.addAddressForUser(createAddressDto);
         return ResponseEntity.ok("");
     }
 

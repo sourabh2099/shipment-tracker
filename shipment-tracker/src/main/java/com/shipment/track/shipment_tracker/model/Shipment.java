@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -17,11 +21,11 @@ public class Shipment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "origin_address")
     private Address originAddress;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "destination_address")
     private Address destinationAddress;
 
@@ -32,5 +36,11 @@ public class Shipment {
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "shipment")
+    private List<TrackingDetails> trackingDetails;
+
+    @CreationTimestamp
+    private Date created_At;
 
 }

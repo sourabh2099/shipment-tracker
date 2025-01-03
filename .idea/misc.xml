@@ -12,6 +12,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/shipment-tracker/untitled/pom.xml" />
+        <option value="$PROJECT_DIR$/shipment-trackerr-pojo/pom.xml" />
       </set>
     </option>
   </component>

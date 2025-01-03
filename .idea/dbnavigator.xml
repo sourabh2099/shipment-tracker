@@ -16,9 +16,8 @@
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="9f35a6b9-899e-434d-95ca-7d0f4d204b05">
-      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[select * from shipment_details;
-select * from user_details;]]></console>
+    <connection id="2120c541-a4a8-40d0-b944-90f5db22f9ff">
+      <console name="Connection 1" type="STANDARD" schema="" session="Main"><![CDATA[select * from address_details;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -28,7 +27,7 @@ select * from user_details;]]></console>
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="9f35a6b9-899e-434d-95ca-7d0f4d204b05" />
+    <connection id="2120c541-a4a8-40d0-b944-90f5db22f9ff" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="9f35a6b9-899e-434d-95ca-7d0f4d204b05" dataset="public.posts" active-filter-id="" />
@@ -40,15 +39,23 @@ select * from user_details;]]></console>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
   </component>
+  <component name="DBNavigator.Project.MethodExecutionManager">
+    <method-browser />
+    <execution-history>
+      <group-entries value="true" />
+      <execution-inputs />
+    </execution-history>
+    <argument-values-cache />
+  </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="9f35a6b9-899e-434d-95ca-7d0f4d204b05" active="true" signed="true">
+      <connection id="2120c541-a4a8-40d0-b944-90f5db22f9ff" active="true" signed="true">
         <database>
-          <name value="Connection" />
+          <name value="Connection 1" />
           <description value="" />
           <database-type value="POSTGRES" />
           <config-type value="BASIC" />
@@ -59,7 +66,7 @@ select * from user_details;]]></console>
           <url-type value="DATABASE" />
           <host value="localhost" />
           <port value="5432" />
-          <database value="shipment-tracker" />
+          <database value="postgres" />
           <tns-folder value="" />
           <tns-profile value="" />
           <type value="USER_PASSWORD" />

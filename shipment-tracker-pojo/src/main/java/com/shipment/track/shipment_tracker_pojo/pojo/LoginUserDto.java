@@ -1,4 +1,4 @@
-package com.shipment.track.shipment_tracker.pojo;
+package com.shipment.track.shipment_tracker_pojo.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

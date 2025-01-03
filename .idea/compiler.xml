@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shipment-tracker" />
+        <module name="shipment-tracker-pojo" />
         <module name="notification-service" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
       <module name="notification-service" options="-parameters" />
       <module name="parent" options="-parameters" />
       <module name="shipment-tracker" options="-parameters" />
+      <module name="shipment-tracker-pojo" options="-parameters" />
       <module name="untitled" options="-parameters" />
     </option>
   </component>

@@ -1,4 +1,4 @@
-package com.shipment.track.notification_service.dto.enums.MessageType;
+package com.shipment.track.shipment_tracker_pojo.pojo.dto.enums.MessageType;
 
 import java.util.EnumSet;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.shipment.track.shipment_tracker.pojo;
+package com.shipment.track.shipment_tracker_pojo.pojo;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

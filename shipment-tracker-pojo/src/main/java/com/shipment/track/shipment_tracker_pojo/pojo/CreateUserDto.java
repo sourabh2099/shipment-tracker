@@ -1,6 +1,6 @@
-package com.shipment.track.shipment_tracker.pojo;
+package com.shipment.track.shipment_tracker_pojo.pojo;
 
-import com.shipment.track.shipment_tracker.validators.EmailValidator;
+import com.shipment.track.shipment_tracker_pojo.pojo.validators.EmailValidator;
 import lombok.Data;
 
 @Data

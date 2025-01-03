@@ -3,26 +3,25 @@ package com.shipment.track.shipment_tracker.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shipment.track.shipment_tracker.enums.DeliveryStatus;
 import com.shipment.track.shipment_tracker.enums.ShipmentStatus;
-import com.shipment.track.shipment_tracker.model.Shipment;
-import com.shipment.track.shipment_tracker.model.TrackingDetails;
-import com.shipment.track.shipment_tracker.model.User;
-import com.shipment.track.shipment_tracker.pojo.AddressDto;
-import com.shipment.track.shipment_tracker.pojo.CreateUserDto;
-import com.shipment.track.shipment_tracker.repository.ShipmentRepository;
-import com.shipment.track.shipment_tracker.repository.TrackingDetailsRepository;
-import com.shipment.track.shipment_tracker.repository.UserRepository;
+import com.shipment.track.shipment_tracker.model.Package;
+import com.shipment.track.shipment_tracker.model.*;
+import com.shipment.track.shipment_tracker.repository.*;
 import com.shipment.track.shipment_tracker.service.CrudOperations;
-import jakarta.persistence.EntityManager;
+import com.shipment.track.shipment_tracker_pojo.pojo.CreateUserDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.CreateAddressDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.CreateShipmentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Service
@@ -31,14 +30,19 @@ public class CrudOperationsImpl implements CrudOperations {
     private final UserRepository userRepository;
     private final ShipmentRepository shipmentRepository;
     private final TrackingDetailsRepository trackingDetailsRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
-    private EntityManager entityManager;
+    private AddressRepository addressRepository;
+    @Autowired
+    private PackageRepository packageRepository;
+
+
+    private final Function<Long, Address> getAddressWithId = id -> addressRepository.findById(id).orElseThrow();
+
     private static List<TrackingDetails> trackingDetailsList = new ArrayList<>();
 
     public CrudOperationsImpl(UserRepository userRepository,
@@ -72,13 +76,65 @@ public class CrudOperationsImpl implements CrudOperations {
         try (Stream<TrackingDetails> stream = trackingDetailsRepository.findAllTrackingDetails("PENDING")) {
             stream.peek(item -> {
                 LOG.info("Data streamed {}", item);
-                entityManager.detach(item);
                 item.setDeliveryStatus(DeliveryStatus.DELAYED);
                 trackingDetailsList.add(item);
             }).count();
         }
         List<TrackingDetails> trackingDetails = trackingDetailsRepository.saveAll(trackingDetailsList);
-        LOG.info("Updated tracking details of size {}",trackingDetails.size());
+        LOG.info("Updated tracking details of size {}", trackingDetails.size());
+    }
+
+    @Override
+    @Transactional
+    public void createShipment(CreateShipmentDto createShipmentDto) {
+        User userData = getUserData();
+        Shipment shipmentEntity = getShipmentEntity(createShipmentDto,userData);
+        List<Package> packageList = createShipmentDto.getPackages().stream().map(packageItem -> {
+                    Package aPackage = objectMapper.convertValue(packageItem, Package.class);
+                    aPackage.setShipment(shipmentEntity);
+                    return aPackage;
+                }
+        ).toList();
+        packageRepository.saveAll(packageList);
+        TrackingDetails trackingInfo = createTrackingInfo(shipmentEntity, createShipmentDto);
+        trackingDetailsRepository.save(trackingInfo);
+
+    }
+
+    private User getUserData() {
+        Authentication authenticationContext = SecurityContextHolder.getContext().getAuthentication();
+        return (User) authenticationContext.getPrincipal();
+    }
+
+    @Override
+    public void addAddressForUser(CreateAddressDto createAddressDto) {
+        User userData = getUserData();
+        Address savedAddress = addressRepository.save(Address.builder()
+                .user(userData)
+                .addressLine1(createAddressDto.getAddressLine1())
+                .addressLine2(createAddressDto.getAddressLine2())
+                .pincode(createAddressDto.getPincode())
+                .state(createAddressDto.getState())
+                .build());
+        LOG.info("Saved address with details as follows {}", savedAddress);
+
+    }
+
+    private TrackingDetails createTrackingInfo(Shipment shipmentEntity, CreateShipmentDto createShipmentDto) {
+        TrackingDetails trackingDetails = new TrackingDetails();
+        trackingDetails.setLocation(shipmentEntity.getOriginAddress().getState()); // setting the initial origin state
+        trackingDetails.setDeliveryStatus(DeliveryStatus.READY_TO_BE_SHIPPED);
+        return trackingDetails;
+    }
+
+    private Shipment getShipmentEntity(CreateShipmentDto createShipmentDto, User userData) {
+        Shipment shipment = new Shipment();
+        shipment.setShipmentStatus(ShipmentStatus.PENDING);
+        shipment.setDestinationAddress(getAddressWithId.apply(createShipmentDto.getDestinationAddress()));
+        shipment.setOriginAddress(getAddressWithId.apply(createShipmentDto.getOriginAddress()));
+        shipment.setUser(userData);
+        shipmentRepository.save(shipment);
+        return shipment;
     }
 
 

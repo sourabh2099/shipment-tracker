@@ -33,4 +33,10 @@ public class SearchController {
         LOG.info("Find all the available tracking details !!");
         return ResponseEntity.ok(searchOperations.getAllTrackingDetails());
     }
+
+    @GetMapping("/get-shipments-for-user")
+    public ResponseEntity<?> getShipmentsForUser(){
+        searchOperations.getShipmentsForUser();
+        return ResponseEntity.ok("");
+    }
 }

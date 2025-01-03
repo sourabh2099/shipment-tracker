@@ -1,6 +1,6 @@
-package com.shipment.track.notification_service.dto;
+package com.shipment.track.shipment_tracker_pojo.pojo.dto;
 
-import com.shipment.track.notification_service.dto.enums.MessageType.MessageType;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.enums.MessageType.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

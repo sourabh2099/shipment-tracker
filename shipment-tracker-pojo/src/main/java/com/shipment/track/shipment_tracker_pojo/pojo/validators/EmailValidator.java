@@ -1,6 +1,6 @@
-package com.shipment.track.shipment_tracker.validators;
+package com.shipment.track.shipment_tracker_pojo.pojo.validators;
 
-import com.shipment.track.shipment_tracker.validators.impl.EmailValidatorImpl;
+import com.shipment.track.shipment_tracker_pojo.pojo.validators.impl.EmailValidatorImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
