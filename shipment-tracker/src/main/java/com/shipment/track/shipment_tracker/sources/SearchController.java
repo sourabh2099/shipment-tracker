@@ -1,5 +1,6 @@
 package com.shipment.track.shipment_tracker.sources;
 
+import com.shipment.track.shipment_tracker.model.TrackingDetails;
 import com.shipment.track.shipment_tracker.service.SearchOperations;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,7 +39,7 @@ public class SearchController {
 
     @GetMapping("/get-shipments-for-user")
     public ResponseEntity<?> getShipmentsForUser(){
-        searchOperations.getShipmentsForUser();
-        return ResponseEntity.ok("");
+        List<TrackingDetails> shipmentsForUser = searchOperations.getShipmentsForUser();
+        return ResponseEntity.ok(shipmentsForUser);
     }
 }

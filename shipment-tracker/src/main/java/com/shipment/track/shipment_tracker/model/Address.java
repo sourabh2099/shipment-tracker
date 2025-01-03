@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,44 +30,63 @@ public class Address {
         return id;
     }
 
-    public Address setId(Long id) {
-        this.id = id;
-        return this;
+    public Long getId() {
+        return id;
     }
 
-    public String addressLine1() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAddressLine1() {
         return addressLine1;
     }
 
-    public Address setAddressLine1(String addressLine1) {
+    public void setAddressLine1(String addressLine1) {
         this.addressLine1 = addressLine1;
-        return this;
     }
 
-    public String addressLine2() {
+    public String getAddressLine2() {
         return addressLine2;
     }
 
-    public Address setAddressLine2(String addressLine2) {
+    public void setAddressLine2(String addressLine2) {
         this.addressLine2 = addressLine2;
-        return this;
     }
 
-    public Long pincode() {
+    public Long getPincode() {
         return pincode;
     }
 
-    public Address setPincode(Long pincode) {
+    public void setPincode(Long pincode) {
         this.pincode = pincode;
-        return this;
     }
 
-    public String state() {
+    public String getState() {
         return state;
     }
 
-    public Address setState(String state) {
+    public void setState(String state) {
         this.state = state;
-        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", pincode=" + pincode +
+                ", state='" + state + '\'' +
+                ", user=" + user +
+                '}';
     }
 }

@@ -36,7 +36,7 @@ public class CrudOperationsImpl implements CrudOperations {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private AddressRepository addressRepository;
+    private AddressRepository   addressRepository;
     @Autowired
     private PackageRepository packageRepository;
 
@@ -124,6 +124,7 @@ public class CrudOperationsImpl implements CrudOperations {
         TrackingDetails trackingDetails = new TrackingDetails();
         trackingDetails.setLocation(shipmentEntity.getOriginAddress().getState()); // setting the initial origin state
         trackingDetails.setDeliveryStatus(DeliveryStatus.READY_TO_BE_SHIPPED);
+        trackingDetails.setShipment(shipmentEntity);
         return trackingDetails;
     }
 

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,16 +33,15 @@ public class SearchOperationsImpl implements SearchOperations {
 
     @Override
     @Transactional
-    public void getShipmentsForUser() {
+    public List<TrackingDetails> getShipmentsForUser() {
         User userData = getUserData();
         log.info("User trying to obtain information is {}",userData);
-//        try(Stream<TrackingDetails> trackingDetailsStream = trackingDetailsRepository.findAllTrackingDetailsByUser(userData.getId())){
-//            long count = trackingDetailsStream.peek(item -> log.info("Item {}",item)).count();
-//            log.info("Found out count {}",count);
-//        }
-        List<TrackingDetails> allTrackingDetailsByUserList = trackingDetailsRepository.findAllTrackingDetailsByUserList(userData.getId());
-        log.info("details : {}");
-
+        List<TrackingDetails> trackingDetailsList = new ArrayList<>();
+        try(Stream<TrackingDetails> trackingDetailsStream = trackingDetailsRepository.findAllTrackingDetailsByUser(userData.getId())){
+            long count = trackingDetailsStream.peek(trackingDetailsList::add).count();
+            log.info("Found out count {}",count);
+        }
+        return trackingDetailsList;
     }
     private User getUserData() {
         Authentication authenticationContext = SecurityContextHolder.getContext().getAuthentication();

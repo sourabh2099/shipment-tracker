@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity(name = "package_details")
 public class Package {
     @Id
@@ -26,5 +25,43 @@ public class Package {
 
     private Float weight;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+
+    public String getPackageType() {
+        return packageType;
+    }
+
+    public void setPackageType(String packageType) {
+        this.packageType = packageType;
+    }
+
+    public String getPackageValue() {
+        return packageValue;
+    }
+
+    public void setPackageValue(String packageValue) {
+        this.packageValue = packageValue;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
 }

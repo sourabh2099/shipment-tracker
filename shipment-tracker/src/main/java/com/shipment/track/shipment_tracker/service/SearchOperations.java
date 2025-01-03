@@ -10,5 +10,5 @@ public interface SearchOperations {
     Optional<TrackingDetails> getTrackingDetails(Long trackingId);
     List<TrackingDetails> getAllTrackingDetails();
 
-     void getShipmentsForUser();
+    List<TrackingDetails> getShipmentsForUser();
 }

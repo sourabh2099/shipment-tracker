@@ -58,18 +58,17 @@ public class AppEventListener {
         for (int i = 0; i < 2; i++) {
             Shipment shipment = new Shipment();
 
-            shipment.setDestinationAddress(new Address()
-                    .setAddressLine1(randomAddressGenerator())
-                    .setAddressLine2(randomAddressGenerator())
-                    .setPincode(700051L)
-                    .setState("West Bengal")
-            );
-            shipment.setOriginAddress(new Address()
-                    .setAddressLine1(randomAddressGenerator())
-                    .setAddressLine2(randomAddressGenerator())
-                    .setPincode(700432L)
-                    .setState("West Bengal")
-            );
+//            shipment.setDestinationAddress(new Address()
+//                    .setAddressLine1(randomAddressGenerator())
+//                    .setPincode(700051L)
+//                    .setState("West Bengal")
+//            );
+//            shipment.setOriginAddress(new Address()
+//                    .setAddressLine1(randomAddressGenerator())
+//                    .setAddressLine2(randomAddressGenerator())
+//                    .setPincode(700432L)
+//                    .setState("West Bengal")
+//            );
             shipment.setShipmentStatus(ShipmentStatus.PENDING);
             shipment.setUser(user);
             shipmentRepository.save(shipment);
