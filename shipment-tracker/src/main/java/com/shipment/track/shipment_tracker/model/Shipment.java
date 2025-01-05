@@ -1,5 +1,8 @@
 package com.shipment.track.shipment_tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shipment.track.shipment_tracker.enums.ShipmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,15 +28,13 @@ public class Shipment {
     @JoinColumn(name = "destination_address")
     private Address destinationAddress;
 
-    @Column(name = "shipment_status")
-    @Enumerated(EnumType.STRING)
-    private ShipmentStatus shipmentStatus;
-
     @ManyToOne()
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "shipment")
+    @JsonBackReference
     private List<TrackingDetails> trackingDetails;
 
     @CreationTimestamp
@@ -64,13 +65,6 @@ public class Shipment {
         this.destinationAddress = destinationAddress;
     }
 
-    public ShipmentStatus getShipmentStatus() {
-        return shipmentStatus;
-    }
-
-    public void setShipmentStatus(ShipmentStatus shipmentStatus) {
-        this.shipmentStatus = shipmentStatus;
-    }
 
     public User getUser() {
         return user;
@@ -96,16 +90,4 @@ public class Shipment {
         this.created_At = created_At;
     }
 
-    @Override
-    public String toString() {
-        return "Shipment{" +
-                "id=" + id +
-                ", originAddress=" + originAddress +
-                ", destinationAddress=" + destinationAddress +
-                ", shipmentStatus=" + shipmentStatus +
-                ", user=" + user +
-                ", trackingDetails=" + trackingDetails +
-                ", created_At=" + created_At +
-                '}';
-    }
 }

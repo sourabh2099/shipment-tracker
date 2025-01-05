@@ -42,5 +42,8 @@ public interface TrackingDetailsRepository extends JpaRepository<TrackingDetails
     @Query(value = "select td.* from shipment_details sd left join tracking_details td on sd.id = td.shipment_id where sd.user_id = ?1 ", nativeQuery = true)
     List<TrackingDetails> findAllTrackingDetailsByUserList(Long userId);
 
+    @Query(value = "select * from tracking_details td where shipment_id = ?1",nativeQuery = true)
+    List<TrackingDetails> findTrackinngDetailsByShipmentId(Long shipmentId);
+
 
 }

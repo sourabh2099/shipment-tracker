@@ -69,7 +69,6 @@ public class AppEventListener {
 //                    .setPincode(700432L)
 //                    .setState("West Bengal")
 //            );
-            shipment.setShipmentStatus(ShipmentStatus.PENDING);
             shipment.setUser(user);
             shipmentRepository.save(shipment);
             //  create tracking details with CREATED as status.

@@ -1,13 +1,18 @@
 package com.shipment.track.shipment_tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shipment.track.shipment_tracker.enums.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,10 +30,18 @@ public class TrackingDetails {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
+    @Column(name = "message", nullable = false)
+    private String message;
+
     @ManyToOne
     @JoinColumn(name = "shipment_id")
-    @Fetch(FetchMode.JOIN)
+    @JsonManagedReference
     private Shipment shipment;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Date createdAt;
+
 
     public Long getId() {
         return id;
@@ -62,13 +75,11 @@ public class TrackingDetails {
         this.shipment = shipment;
     }
 
-    @Override
-    public String toString() {
-        return "TrackingDetails{" +
-                "id=" + id +
-                ", Location='" + Location + '\'' +
-                ", deliveryStatus=" + deliveryStatus +
-                ", shipment=" + shipment +
-                '}';
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

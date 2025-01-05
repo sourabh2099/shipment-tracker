@@ -40,6 +40,8 @@ public class SearchController {
     @GetMapping("/get-shipments-for-user")
     public ResponseEntity<?> getShipmentsForUser(){
         List<TrackingDetails> shipmentsForUser = searchOperations.getShipmentsForUser();
+        log.info("Shipments {}",shipmentsForUser);
         return ResponseEntity.ok(shipmentsForUser);
     }
+
 }
