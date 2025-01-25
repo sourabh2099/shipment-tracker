@@ -17,6 +17,7 @@
         <module>shipment-tracker</module>
         <module>notification-service</module>
         <module>shipment-tracker-pojo</module>
+        <module>location-service</module>
     </modules>
     <properties>
         <java.version>21</java.version>
@@ -33,6 +34,8 @@
         <jjwt-jackson.version>0.11.5</jjwt-jackson.version>
         <spring-boot-starter-mail.version>3.4.0</spring-boot-starter-mail.version>
         <jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
+        <reactor-test.version>3.7.1</reactor-test.version>
+        <spring-boot-starter-data-mongodb-reactive.version>3.3.2</spring-boot-starter-data-mongodb-reactive.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -43,9 +46,20 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-aop</artifactId>
@@ -104,12 +118,14 @@
                 <version>${spring.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/io.projectreactor/reactor-test -->
             <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-test</artifactId>
-                <version>${spring.version}</version>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-test</artifactId>
+                <version>${reactor-test.version}</version>
                 <scope>test</scope>
             </dependency>
+
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -197,6 +213,13 @@
                 <artifactId>spring-cloud-test-support</artifactId>
                 <version>4.1.4</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb-reactive -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+                <version>${spring-boot-starter-data-mongodb-reactive.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
