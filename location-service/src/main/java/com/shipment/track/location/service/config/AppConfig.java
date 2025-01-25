@@ -1,7 +1,5 @@
 package com.shipment.track.location.service.config;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;

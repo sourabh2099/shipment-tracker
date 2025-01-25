@@ -1,10 +1,12 @@
 package com.shipment.track.location.service.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shipment.track.location.service.documents.LocationDocument;
 import com.shipment.track.location.service.repsitory.LocationRepository;
 import com.shipment.track.location.service.service.OsmService;
 import com.shipment.track.location.service.utils.AppUtils;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.ErrorResponseDto;
 import com.shipment.track.shipment_tracker_pojo.pojo.exceptions.NotSupportedOsmDataException;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -12,11 +14,9 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -33,11 +33,14 @@ import static com.shipment.track.location.service.utils.AppConstants.*;
 @Service
 public class OsmServiceImpl implements OsmService {
     private static final Logger LOG = LoggerFactory.getLogger(OsmServiceImpl.class);
+    private final ObjectMapper objectMapper;
+    private final LocationRepository locationRepository;
     private WebClient webClient;
 
-    @Autowired
-    private LocationRepository locationRepository;
-
+    public OsmServiceImpl(ObjectMapper objectMapper, LocationRepository locationRepository) {
+        this.objectMapper = objectMapper;
+        this.locationRepository = locationRepository;
+    }
 
     @PostConstruct
     void init() {
@@ -69,6 +72,14 @@ public class OsmServiceImpl implements OsmService {
                         }
                 )
                 .doOnNext(this::createLocationEntity)
+                .onErrorResume(NotSupportedOsmDataException.class::isInstance
+                        , throwable -> {
+                            ErrorResponseDto errorResponse = ErrorResponseDto.builder()
+                                    .errorType(throwable.getClass().toGenericString())
+                                    .errorMessage(throwable.getLocalizedMessage())
+                                    .build();
+                            return Mono.just(objectMapper.valueToTree(errorResponse));
+                        })
                 .doOnError(error -> LOG.error("Encountered error while processing", error.getCause()));
 
     }
