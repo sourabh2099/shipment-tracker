@@ -58,37 +58,37 @@ public class OsmServiceImpl implements OsmService {
     @Override
     public Flux<?> getLocationData(MultiValueMap<String, String> locationQueryParams) {
         return webClient.get()
-                .uri(uriBuilder -> {
-                            URI build = uriBuilder.path("/search")
-                                    .queryParams(locationQueryParams).build();
-                            LOG.info("URI : {}", build);
-                            return build;
-                        }
+                .uri(uriBuilder ->
+                        uriBuilder.path("/search")
+                                .queryParams(locationQueryParams).build()
                 )
                 .exchangeToFlux(clientResponse -> {
-                            LOG.info("Request made to {} and statusCode {}"
+                            LOG.debug("Request made to {} and statusCode {}"
                                     , clientResponse.request().getURI(), clientResponse.statusCode());
                             return clientResponse.bodyToFlux(JsonNode.class);
                         }
                 )
-                .doOnNext(this::createLocationEntity)
-                .onErrorResume(NotSupportedOsmDataException.class::isInstance
-                        , throwable -> {
-                            ErrorResponseDto errorResponse = ErrorResponseDto.builder()
-                                    .errorType(throwable.getClass().toGenericString())
-                                    .errorMessage(throwable.getLocalizedMessage())
-                                    .build();
-                            return Mono.just(objectMapper.valueToTree(errorResponse));
-                        })
-                .doOnError(error -> LOG.error("Encountered error while processing", error.getCause()));
+                .flatMap(item -> Mono.just(item)
+                        .doOnNext(this::saveLocationEntity)
+                        .onErrorResume(NotSupportedOsmDataException.class::isInstance
+                                , throwable -> {
+                                    LOG.info("Found error while trying to process request");
+                                    ErrorResponseDto errorResponse = ErrorResponseDto.builder()
+                                            .errorType(throwable.getClass().toGenericString())
+                                            .errorMessage(throwable.getLocalizedMessage())
+                                            .build();
+                                    return Mono.just(objectMapper.valueToTree(errorResponse));
+                                })
+                        .onErrorStop()
+                )
+                .onErrorContinue((throwable, o) -> LOG.info("On Error Continue {}", o));
 
     }
 
-    private void createLocationEntity(JsonNode locationData) {
-        LOG.info("create Location entity called {}", locationData);
+    private void saveLocationEntity(JsonNode locationData) {
         if (!AppUtils.checkOsmNodeType.test(locationData)) {
             throw new NotSupportedOsmDataException("Server Currently Accepting only OSM types of "
-                    + SUPPORTED_OSM_TYPE + " received of type" + locationData.get(OSM_TYPE));
+                    + SUPPORTED_OSM_TYPE + " received of type " + locationData.get(OSM_TYPE).asText(""));
         }
         LocationDocument document = new LocationDocument();
         document.setName(locationData.get(PLACE_NAME).asText());

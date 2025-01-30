@@ -35,18 +35,12 @@ public class LocationServiceController {
                                                     @RequestParam(name = "addressDetails", required = false) String addressNumber,
                                                     @RequestParam(name = "limit", required = false) String limit,
                                                     @RequestParam(name = "polygon_svg", required = false) String polygon_svg) {
-        LOG.info("Got request to get Coordinates for Location {} {} {} {}", location,
-                addressNumber, limit, polygon_svg);
         MultiValueMap<String, String> locationQueryParams = new LinkedMultiValueMap<>();
         addValueToMap("q", location, locationQueryParams);
         addValueToMap("format","json",locationQueryParams);
         addValueToMap("addressDetails", addressNumber, locationQueryParams);
         addValueToMap("limit", limit, locationQueryParams);
         addValueToMap("polygon_svg", polygon_svg, locationQueryParams);
-        return ResponseEntity.ok(osmService.getLocationData(locationQueryParams).map(item -> {
-                    LOG.info("items {}", item);
-                    return item;
-                }
-        ));
+        return ResponseEntity.ok(osmService.getLocationData(locationQueryParams));
     }
 }
