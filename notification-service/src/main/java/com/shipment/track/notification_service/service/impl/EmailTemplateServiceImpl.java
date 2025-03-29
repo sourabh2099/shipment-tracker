@@ -1,7 +1,7 @@
 package com.shipment.track.notification_service.service.impl;
 
-import com.shipment.track.notification_service.dto.NotificationMessage;
 import com.shipment.track.notification_service.service.EmailTemplateService;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;
 import gg.jte.TemplateEngine;
 import gg.jte.TemplateOutput;
 import gg.jte.output.StringOutput;

@@ -1,8 +1,9 @@
 package com.shipment.track.notification_service.validators.impl;
 
-import com.shipment.track.notification_service.dto.NotificationMessage;
+
 import com.shipment.track.notification_service.exceptions.NotificationValidationException;
 import com.shipment.track.notification_service.validators.Validator;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

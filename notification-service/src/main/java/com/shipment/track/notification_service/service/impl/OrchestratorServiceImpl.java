@@ -1,6 +1,6 @@
 package com.shipment.track.notification_service.service.impl;
 
-import com.shipment.track.notification_service.dto.NotificationMessage;
+
 import com.shipment.track.notification_service.entity.ClientCounter;
 import com.shipment.track.notification_service.queue.MessageQueue;
 import com.shipment.track.notification_service.repository.ClientCounterRepository;
@@ -9,6 +9,7 @@ import com.shipment.track.notification_service.service.EmailTemplateService;
 import com.shipment.track.notification_service.service.OrchestratorService;
 import com.shipment.track.notification_service.service.strategy.PriorityAssignmentStrategy;
 import com.shipment.track.notification_service.validators.Validator;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

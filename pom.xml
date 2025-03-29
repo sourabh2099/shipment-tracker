@@ -36,6 +36,7 @@
         <jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
         <reactor-test.version>3.7.1</reactor-test.version>
         <spring-boot-starter-data-mongodb-reactive.version>3.3.2</spring-boot-starter-data-mongodb-reactive.version>
+        <spring-core.version>3.3.2</spring-core.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -218,6 +219,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
                 <version>${spring-boot-starter-data-mongodb-reactive.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
+                <version>${spring-core.version}</version>
             </dependency>
 
         </dependencies>

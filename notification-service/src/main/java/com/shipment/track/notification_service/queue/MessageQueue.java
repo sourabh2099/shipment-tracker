@@ -1,6 +1,7 @@
 package com.shipment.track.notification_service.queue;
 
-import com.shipment.track.notification_service.dto.NotificationMessage;
+
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;
 import lombok.Data;
 
 import java.util.LinkedList;

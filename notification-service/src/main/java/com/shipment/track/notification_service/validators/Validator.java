@@ -1,6 +1,7 @@
 package com.shipment.track.notification_service.validators;
 
-import com.shipment.track.notification_service.dto.NotificationMessage;
+
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;
 
 public interface Validator<T extends NotificationMessage> {
 

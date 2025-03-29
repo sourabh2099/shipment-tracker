@@ -18,7 +18,6 @@ public class AppConfig extends AbstractReactiveMongoConfiguration {
 //                .build());
         return bean;
     }
-
     @Override
     protected String getDatabaseName() {
         return "location-service";

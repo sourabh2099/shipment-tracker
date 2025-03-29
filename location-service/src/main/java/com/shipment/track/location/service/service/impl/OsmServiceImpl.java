@@ -2,18 +2,27 @@ package com.shipment.track.location.service.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.model.Indexes;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.shipment.track.location.service.documents.LocationDocument;
 import com.shipment.track.location.service.repsitory.LocationRepository;
 import com.shipment.track.location.service.service.OsmService;
 import com.shipment.track.location.service.utils.AppUtils;
+import com.shipment.track.shipment_tracker_pojo.pojo.config.LocationTrackerConfig;
 import com.shipment.track.shipment_tracker_pojo.pojo.dto.ErrorResponseDto;
+import com.shipment.track.shipment_tracker_pojo.pojo.exceptions.IndexAllReadyFouncException;
 import com.shipment.track.shipment_tracker_pojo.pojo.exceptions.NotSupportedOsmDataException;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import jakarta.annotation.PostConstruct;
+import org.bson.Document;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
@@ -23,9 +32,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.shipment.track.location.service.utils.AppConstants.*;
@@ -36,11 +45,18 @@ public class OsmServiceImpl implements OsmService {
     private final ObjectMapper objectMapper;
     private final LocationRepository locationRepository;
     private WebClient webClient;
+    @Autowired
+    private MongoClient mongoClient;
+
+    @Autowired
+    private LocationTrackerConfig locationTrackerConfig;
 
     public OsmServiceImpl(ObjectMapper objectMapper, LocationRepository locationRepository) {
         this.objectMapper = objectMapper;
         this.locationRepository = locationRepository;
+
     }
+
 
     @PostConstruct
     void init() {
@@ -53,6 +69,41 @@ public class OsmServiceImpl implements OsmService {
                 );
         webClient = WebClient.builder().baseUrl("https://nominatim.openstreetmap.org")
                 .clientConnector(new ReactorClientHttpConnector(httpClient)).build();
+
+        initDatabaseIndex();
+    }
+
+    private void initDatabaseIndex() {
+        MongoDatabase database = mongoClient.getDatabase(locationTrackerConfig.getDatabase().getName());
+        MongoCollection<Document> collection = database.getCollection(locationTrackerConfig.getDatabase().getCollectionName());
+        Flux.from(collection.listIndexes())
+                .doOnNext(indexDoc -> {
+                    String indexName = getNodeData(indexDoc, "name");
+                    if ("coordinates_2dsphere".equals(indexName)) {
+                        throw new IndexAllReadyFouncException("Index already found to be created in the database");
+                    }
+                })
+                .doOnComplete(() -> create2DSphereIndex(collection))
+                .doOnTerminate(() -> LOG.info("Stream Terminated !! ")).subscribe();
+
+    }
+
+    private String getNodeData(Document document, String fieldName) {
+        if (document.get(fieldName) instanceof String) {
+            return document.get(fieldName).toString();
+        }
+        if (Objects.isNull(document.get(fieldName))) {
+            return null;
+        }
+        // todo to implement a recurrsive implementation to find node details
+        return null;
+
+    }
+
+    private void create2DSphereIndex(MongoCollection<Document> collection) {
+        Mono.from(collection.createIndex(Indexes.geo2dsphere(locationTrackerConfig.getDatabase()
+                        .getSpatialIndexFieldName())))
+                .log().subscribe();
     }
 
     @Override
@@ -63,7 +114,7 @@ public class OsmServiceImpl implements OsmService {
                                 .queryParams(locationQueryParams).build()
                 )
                 .exchangeToFlux(clientResponse -> {
-                            LOG.debug("Request made to {} and statusCode {}"
+                            LOG.info("Request made to {} and statusCode {}"
                                     , clientResponse.request().getURI(), clientResponse.statusCode());
                             return clientResponse.bodyToFlux(JsonNode.class);
                         }
