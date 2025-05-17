@@ -4,5 +4,5 @@ locationService:
     database:
       name: location-service
       collection-name: location_document
-      spatial-index-field-name: coordinates
+      spatial-index-field-name: geoData
 

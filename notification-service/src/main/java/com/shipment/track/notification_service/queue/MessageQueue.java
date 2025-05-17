@@ -14,6 +14,7 @@ public class MessageQueue {
     private final Queue<NotificationMessage> notificationQueue;
 
     private static class InstanceHolder {
+
         private static final MessageQueue INSTANCE = new MessageQueue();
     }
 

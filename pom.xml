@@ -37,6 +37,8 @@
         <reactor-test.version>3.7.1</reactor-test.version>
         <spring-boot-starter-data-mongodb-reactive.version>3.3.2</spring-boot-starter-data-mongodb-reactive.version>
         <spring-core.version>3.3.2</spring-core.version>
+        <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
+        <jackson-databind.version>2.17.2</jackson-databind.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -98,7 +100,6 @@
                 <artifactId>postgresql</artifactId>
                 <version>42.7.4</version>
             </dependency>
-
 
             <dependency>
                 <groupId>org.flywaydb</groupId>
@@ -182,6 +183,13 @@
                 <version>${jjwt-jackson.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+
             <!-- TEST DEPENDENCIES -->
             <dependency>
                 <groupId>org.springframework.restdocs</groupId>
@@ -189,7 +197,7 @@
                 <version>3.0.1</version>
                 <scope>test</scope>
             </dependency>
-           <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -244,7 +252,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>3.3.2</version>
-                    </plugin>
+                </plugin>
             </plugins>
         </pluginManagement>
 

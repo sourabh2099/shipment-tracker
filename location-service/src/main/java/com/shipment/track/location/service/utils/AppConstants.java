@@ -9,4 +9,5 @@ public class AppConstants {
     public static final String LAT = "lat";
     public static final String LON = "lon";
     public static final Set<String> SUPPORTED_OSM_TYPE = Set.of("node");
+
 }

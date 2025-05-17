@@ -19,7 +19,6 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import jakarta.annotation.PostConstruct;
 import org.bson.Document;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +106,8 @@ public class OsmServiceImpl implements OsmService {
     }
 
     @Override
-    public Flux<?> getLocationData(MultiValueMap<String, String> locationQueryParams) {
-        return webClient.get()
+    public Flux<JsonNode> getLocationData(MultiValueMap<String, String> locationQueryParams,String operation) {
+        Flux<JsonNode> jsonNodeFlux = webClient.get()
                 .uri(uriBuilder ->
                         uriBuilder.path("/search")
                                 .queryParams(locationQueryParams).build()
@@ -118,8 +117,17 @@ public class OsmServiceImpl implements OsmService {
                                     , clientResponse.request().getURI(), clientResponse.statusCode());
                             return clientResponse.bodyToFlux(JsonNode.class);
                         }
-                )
-                .flatMap(item -> Mono.just(item)
+                );
+        if(Objects.equals(operation,"query")){
+            return jsonNodeFlux;
+        }
+
+        return saveFluxData(jsonNodeFlux);
+
+    }
+
+    private Flux<JsonNode> saveFluxData(Flux<JsonNode> jsonNodeFlux) {
+        return jsonNodeFlux.flatMap(item -> Mono.just(item)
                         .doOnNext(this::saveLocationEntity)
                         .onErrorResume(NotSupportedOsmDataException.class::isInstance
                                 , throwable -> {
@@ -133,7 +141,6 @@ public class OsmServiceImpl implements OsmService {
                         .onErrorStop()
                 )
                 .onErrorContinue((throwable, o) -> LOG.info("On Error Continue {}", o));
-
     }
 
     private void saveLocationEntity(JsonNode locationData) {
@@ -144,9 +151,9 @@ public class OsmServiceImpl implements OsmService {
         LocationDocument document = new LocationDocument();
         document.setName(locationData.get(PLACE_NAME).asText());
         document.setDisplayName(locationData.get(DISPLAY_NAME).asText());
-        document.setGeoData(new GeoJsonPoint(locationData.get(LAT).asDouble(), locationData.get(LON).asDouble()));
+        document.setGeoData(new GeoJsonPoint(locationData.get(LON).asDouble(), locationData.get(LAT).asDouble()));
         document.setCreatedDate(LocalDateTime.now());
-        locationRepository.save(document).subscribe(savedDocument -> LOG.info("Document saved is {}", savedDocument),
-                error -> LOG.error("Error while saving the document", error));
+        locationRepository.save(document)
+                .subscribe(savedDocument -> LOG.info("Document saved is {}", savedDocument), error -> LOG.error("Error while saving the document", error));
     }
 }
