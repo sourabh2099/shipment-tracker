@@ -20,5 +20,6 @@ public class OfficeLocationDocument {
     private String officeName;
     private String officeCountry;
     private String officeLocation;
+    private String officeType;
     private GeoJsonPoint officeCoordinates;
 }

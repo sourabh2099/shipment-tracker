@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class LocationTrackerConfig {
     private String checkProperty;
     private DatabaseConfig database;
+    private String pickupRadius;
 
     @AllArgsConstructor
     @NoArgsConstructor

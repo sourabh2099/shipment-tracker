@@ -3,6 +3,6 @@ locationService:
     check-property: hello-world
     database:
       name: location-service
-      collection-name: location_document
-      spatial-index-field-name: geoData
-
+      collection-name: office-location-document
+      spatial-index-field-name: officeCoordinates
+    pickup-radius: 10000 # in meters or 10 km

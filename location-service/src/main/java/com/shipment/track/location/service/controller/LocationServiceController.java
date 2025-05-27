@@ -2,14 +2,17 @@ package com.shipment.track.location.service.controller;
 
 import com.shipment.track.location.service.service.OfficeLocationService;
 import com.shipment.track.location.service.service.OsmService;
+import com.shipment.track.shipment_tracker_pojo.pojo.dto.ClientAddressLocationDto;
 import com.shipment.track.shipment_tracker_pojo.pojo.dto.OfficeDto;
 import com.shipment.track.shipment_tracker_pojo.pojo.dto.OfficeLocationDto;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Objects;
@@ -59,4 +62,13 @@ public class LocationServiceController {
         LOG.info("Got Request to save office data {}",request);
         return ResponseEntity.ok(officeLocationService.registerOffice(request));
     }
+
+    @PostMapping("/pick-up-parcel-nearby") // return the office location nearest to a point
+    public ResponseEntity<?> findOfficeNearBy(@RequestBody ClientAddressLocationDto clientAddressLocationDto){
+       LOG.info("Got Request to query for nearby Office to pick up parcels {}",clientAddressLocationDto);
+        Flux<Document> nearByOfficeLocation = officeLocationService.findNearByOfficeLocation(clientAddressLocationDto);
+        return ResponseEntity.ok(nearByOfficeLocation);
+    }
+
+
 }

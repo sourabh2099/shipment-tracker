@@ -33,7 +33,9 @@ import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.shipment.track.location.service.utils.AppConstants.*;
@@ -77,6 +79,7 @@ public class OsmServiceImpl implements OsmService {
         MongoCollection<Document> collection = database.getCollection(locationTrackerConfig.getDatabase().getCollectionName());
         Flux.from(collection.listIndexes())
                 .doOnNext(indexDoc -> {
+                    LOG.info("Index Doc {}",indexDoc);
                     String indexName = getNodeData(indexDoc, "name");
                     if ("coordinates_2dsphere".equals(indexName)) {
                         throw new IndexAllReadyFouncException("Index already found to be created in the database");
@@ -88,6 +91,7 @@ public class OsmServiceImpl implements OsmService {
     }
 
     private String getNodeData(Document document, String fieldName) {
+
         if (document.get(fieldName) instanceof String) {
             return document.get(fieldName).toString();
         }
