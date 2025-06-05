@@ -1,6 +1,8 @@
 spring:
   application:
     name: shipment-tracker
+server:
+  port: 8081
   flyway:
     locations: classpath:/db/migration
     schemas: shipment-tracker
@@ -42,4 +44,10 @@ application:
     jwt:
       jwt-secret-key: afe65bcd93be0f27d04415f68b9b6ca33f909553ad54c3966cd719a7e44606c1
       jwt-expiration-time: 6000000  #100 min
+
+## properties for service discovery
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 

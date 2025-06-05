@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .anonymous(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.requestMatchers("/auth/**","/error/**").permitAll()
+                        authorizeRequests.requestMatchers("/auth/**","/error/**","/actuator/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionPolicy -> sessionPolicy.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(httpSecurityHeadersConfigurer ->

@@ -18,6 +18,8 @@
         <module>notification-service</module>
         <module>shipment-tracker-pojo</module>
         <module>location-service</module>
+        <module>shipment-eureka-server</module>
+        <module>shiment-api-cloud-gateway</module>
     </modules>
     <properties>
         <java.version>21</java.version>

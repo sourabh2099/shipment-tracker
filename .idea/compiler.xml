@@ -7,7 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="shipment-eureka-server" />
         <module name="shipment-tracker-pojo" />
+        <module name="shiment-api-cloud-gateway" />
         <module name="shipment-tracker" />
         <module name="notification-service" />
         <module name="location-service" />
@@ -22,6 +24,8 @@
       <module name="location-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="parent" options="-parameters" />
+      <module name="shiment-api-cloud-gateway" options="-parameters" />
+      <module name="shipment-eureka-server" options="-parameters" />
       <module name="shipment-tracker" options="-parameters" />
       <module name="shipment-tracker-pojo" options="-parameters" />
       <module name="untitled" options="-parameters" />
