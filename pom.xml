@@ -20,6 +20,7 @@
         <module>location-service</module>
         <module>shipment-eureka-server</module>
         <module>shiment-api-cloud-gateway</module>
+        <module>shipment-tracker-config-server</module>
     </modules>
     <properties>
         <java.version>21</java.version>

@@ -17,11 +17,9 @@ public class RouteConfig {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder routeLocatorBuilder) {
         return routeLocatorBuilder.routes()
-                .route(route -> route.path("/shipment-tracker/++")
-                        .filters(gatewayFilterSpec ->
-                                gatewayFilterSpec.addRequestHeader("hello", "world"))
+                .route(route -> route.path("/shipment-tracker/**")
                         .uri("lb://shipment-tracker"))
-                .route(route -> route.path("/notifcation-service")
+                .route(route -> route.path("/notifcation-service/**")
                         .filters(gatewayFilterSpec -> gatewayFilterSpec.filter(authenticationFilter)
                                 .circuitBreaker(circuitBreakerConsumer -> circuitBreakerConsumer
                                         .setFallbackUri("forward://fallback")))

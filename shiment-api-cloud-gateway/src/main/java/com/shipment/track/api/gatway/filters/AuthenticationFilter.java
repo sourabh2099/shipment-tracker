@@ -29,6 +29,7 @@ public class AuthenticationFilter implements GatewayFilter {
                     .wrap(AUTHORIZATION_ERROR_RESPONSE.getBytes(StandardCharsets.UTF_8));
             return exchange.getResponse().writeWith(Mono.just(data));
         }
+        chain.filter(exchange);
         return Mono.empty();
     }
 }
