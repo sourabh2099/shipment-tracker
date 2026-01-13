@@ -17,23 +17,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class ShipmentTrackerApplication {
     @Autowired
     CrudOperations crudOperations;
-//	@PostConstruct
-//	public void init(){
-//		System.out.println("Calling crud operations for stream ops");
-//		crudOperations.updateShipmentStatusOnDelay();
-//	}
-
-    @Value("${server.port}")
-    private String port;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
-    @PostConstruct
-    public void init() {
-        log.info("Starting application with properties as appName {} , port {}",
-                appName, port);
-    }
 
     public static void main(String[] args) {
 

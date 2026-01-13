@@ -23,7 +23,7 @@ server:
 
 database-details:
   driver-class-name: org.postgresql.Driver
-  url: jdbc:postgresql://localhost:5432/shipment-tracker
+  url: jdbc:postgresql://192.168.65.254:5432/shipment-tracker
   userName: postgres
   password: sourabh
 
@@ -48,9 +48,9 @@ application:
       jwt-secret-key: afe65bcd93be0f27d04415f68b9b6ca33f909553ad54c3966cd719a7e44606c1
       jwt-expiration-time: 6000000  #100 min
 
-## properties for service discovery
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+### properties for service discovery
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
 

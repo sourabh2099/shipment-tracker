@@ -1,0 +1,8 @@
+locationService:
+  config:
+    check-property: hello-world
+    database:
+      name: location-service
+      collection-name: office-location-document
+      spatial-index-field-name: officeCoordinates
+    pickup-radius: 10000 # in meters or 10 km

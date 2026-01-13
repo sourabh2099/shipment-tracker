@@ -1,7 +1,5 @@
 package com.shipment.track.notification_service.validators.impl;
 
-
-
 import com.shipment.track.notification_service.exceptions.NotificationValidationException;
 import com.shipment.track.notification_service.validators.Validator;
 import com.shipment.track.shipment_tracker_pojo.pojo.dto.NotificationMessage;

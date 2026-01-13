@@ -58,7 +58,6 @@ public class OsmServiceImpl implements OsmService {
 
     }
 
-
     @PostConstruct
     void init() {
         HttpClient httpClient = HttpClient.create()
@@ -87,7 +86,6 @@ public class OsmServiceImpl implements OsmService {
                 })
                 .doOnComplete(() -> create2DSphereIndex(collection))
                 .doOnTerminate(() -> LOG.info("Stream Terminated !! ")).subscribe();
-
     }
 
     private String getNodeData(Document document, String fieldName) {

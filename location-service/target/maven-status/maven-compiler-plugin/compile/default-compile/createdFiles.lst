@@ -1,0 +1,10 @@
+com\shipment\track\location\service\config\AppConfig.class
+com\shipment\track\location\service\controller\LocationServiceController.class
+com\shipment\track\location\service\service\OsmService.class
+com\shipment\track\location\service\utils\AppUtils.class
+com\shipment\track\location\service\LocationServiceApplication.class
+com\shipment\track\location\service\utils\AppConstants.class
+com\shipment\track\location\service\repsitory\LocationRepository.class
+com\shipment\track\location\service\documents\LocationDocument.class
+com\shipment\track\location\service\service\impl\OsmServiceImpl.class
+com\shipment\track\location\service\config\IndexConfig.class
