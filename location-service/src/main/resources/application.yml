@@ -6,3 +6,9 @@ locationService:
       collection-name: office-location-document
       spatial-index-field-name: officeCoordinates
     pickup-radius: 10000 # in meters or 10 km
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+    org.springframework.data.mongodb.repository.query: DEBUG
+    org.mongodb.driver.protocol.command: DEBUG

@@ -44,6 +44,7 @@ public class OfficeLocationServiceImpl implements OfficeLocationService {
         this.officeLocationRepository = officeLocationRepository;
         this.objectMapper = objectMapper;
     }
+
     @Autowired
     private LocationTrackerConfig locationTrackerConfig;
 
@@ -62,8 +63,8 @@ public class OfficeLocationServiceImpl implements OfficeLocationService {
      */
     @Override
     public Mono<OfficeLocationDocument> registerOffice(OfficeLocationDto officeLocationData) {
-        Supplier<Mono<OfficeLocationDocument>> monoSupplier = checkIfOfficeExits(officeLocationData);
-        return Mono.defer(monoSupplier);
+
+        return checkIfOfficeExits(officeLocationData);
     }
 
     /**
@@ -77,36 +78,34 @@ public class OfficeLocationServiceImpl implements OfficeLocationService {
     }
 
 
-    private Supplier<Mono<OfficeLocationDocument>> checkIfOfficeExits(OfficeLocationDto officeLocationData) {
-        Supplier<Mono<OfficeLocationDocument>>[] supplierArr = new Supplier[1];
-        supplierArr[0] = Mono::empty; // adding a default value so as to avoid NPE;
-        officeLocationRepository.findOfficeLocationByCoordinatesAndType(
-                        officeLocationData.locationData().get("lon").asLong(),
-                        officeLocationData.locationData().get("lat").asLong(),
+    private Mono<OfficeLocationDocument> checkIfOfficeExits(OfficeLocationDto officeLocationData) {
+        LOG.info("Office Location info coordinates are as follows {} {} lon and lat respectively and hubType {}",
+                officeLocationData.locationData().get("lon").asDouble(), officeLocationData.locationData().get("lat").asDouble(),officeLocationData.officeDetailsInfo().officeType());
+        return officeLocationRepository.findOfficeLocationByCoordinatesAndType(
+                        officeLocationData.locationData().get("lon").asDouble(),
+                        officeLocationData.locationData().get("lat").asDouble(),
                         officeLocationData.officeDetailsInfo().officeType())
-                .any(item -> Double.parseDouble(item.get("distanceBetween").toString()) < 10000)
-                .subscribe(item -> {
-                    LOG.info("{}",item);
-                    if (Boolean.TRUE.equals(item)) {
-                        supplierArr[0] = Mono::empty;
-                    }else{
-                        supplierArr[0] = () -> {
-                            var officeLocationDocument = new OfficeLocationDocument();
-
-                            officeLocationDocument.setOfficeCoordinates(
-                                    new GeoJsonPoint(officeLocationData.locationData().get(AppConstants.LON).asDouble()
-                                            , officeLocationData.locationData().get(AppConstants.LAT).asDouble()));
-                            officeLocationDocument.setOfficeCountry(officeLocationData.officeDetailsInfo().officeCountry());
-                            officeLocationDocument.setOfficeName(officeLocationData.officeDetailsInfo().officeName());
-                            officeLocationDocument.setOfficeLocation(officeLocationData.officeDetailsInfo().officeLocation());
-                            officeLocationDocument.setOfficeType(officeLocationData.officeDetailsInfo().officeType());
-                            return officeLocationRepository.save(officeLocationDocument);
-                        };
+                .doOnNext(item -> LOG.info("items found for the query are as follows {}", item))
+                .any(item -> {
+                    LOG.info("item found from query are {}", item);
+                    return Double.parseDouble(item.get("distanceBetween").toString()) < 10000;
+                })
+                .flatMap(exists -> {
+                    LOG.info("Office exists {}", exists);
+                    if (Boolean.TRUE.equals(exists)) {
+                        return Mono.empty();
                     }
-                }, throwable -> LOG.info("Found error while trying to fetch office records ", throwable));
-        return supplierArr[0];
+                    var officeLocationDocument = new OfficeLocationDocument();
+                    officeLocationDocument.setOfficeCoordinates(
+                            new GeoJsonPoint(officeLocationData.locationData().get(AppConstants.LON).asDouble()
+                                    , officeLocationData.locationData().get(AppConstants.LAT).asDouble()));
+                    officeLocationDocument.setOfficeCountry(officeLocationData.officeDetailsInfo().officeCountry());
+                    officeLocationDocument.setOfficeName(officeLocationData.officeDetailsInfo().officeName());
+                    officeLocationDocument.setOfficeLocation(officeLocationData.officeDetailsInfo().officeLocation());
+                    officeLocationDocument.setOfficeType(officeLocationData.officeDetailsInfo().officeType());
+                    return officeLocationRepository.save(officeLocationDocument);
+                }).doOnError(err -> LOG.info("Found error while trying to fetch details from db", err));
     }
-
 
     private Flux<JsonNode> findPossibleOfficeLocations(OfficeDto officeDto) {
         MultiValueMap<String, String> multiValueMap = OsmQueryParams.getValuesInMap();
@@ -119,7 +118,6 @@ public class OfficeLocationServiceImpl implements OfficeLocationService {
                     }
                     return item;
                 }).onErrorStop();
-
     }
 
     private static String getLocationInfo(JsonNode item, String nodeKey) {

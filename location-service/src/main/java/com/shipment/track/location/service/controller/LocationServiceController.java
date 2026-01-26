@@ -48,7 +48,7 @@ public class LocationServiceController {
         addValueToMap("addressDetails", addressNumber, locationQueryParams);
         addValueToMap("limit", limit, locationQueryParams);
         addValueToMap("polygon_svg", polygon_svg, locationQueryParams);
-        return ResponseEntity.ok(osmService.getLocationData(locationQueryParams, null));
+        return ResponseEntity.ok(osmService.getLocationData(locationQueryParams, "query"));
     }
 
     @GetMapping("/register-office")

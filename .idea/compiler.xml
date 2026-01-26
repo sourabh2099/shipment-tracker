@@ -12,6 +12,7 @@
         <module name="shipment-tracker-config-server" />
         <module name="shipment-tracker-pojo" />
         <module name="shiment-api-cloud-gateway" />
+        <module name="routing-engine" />
         <module name="shipment-tracker" />
         <module name="notification-service" />
       </profile>
@@ -25,6 +26,7 @@
       <module name="location-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="parent" options="-parameters" />
+      <module name="routing-engine" options="-parameters" />
       <module name="shiment-api-cloud-gateway" options="-parameters" />
       <module name="shipment-eureka-server" options="-parameters" />
       <module name="shipment-tracker" options="-parameters" />

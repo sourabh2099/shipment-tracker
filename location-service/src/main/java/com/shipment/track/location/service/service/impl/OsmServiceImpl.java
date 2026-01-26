@@ -61,11 +61,11 @@ public class OsmServiceImpl implements OsmService {
     @PostConstruct
     void init() {
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .responseTimeout(Duration.ofMillis(5000))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 50000)
+                .responseTimeout(Duration.ofMillis(50000))
                 .doOnConnected(connection ->
-                        connection.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
-                                .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS))
+                        connection.addHandlerLast(new ReadTimeoutHandler(50000, TimeUnit.MILLISECONDS))
+                                .addHandlerLast(new WriteTimeoutHandler(50000, TimeUnit.MILLISECONDS))
                 );
         webClient = WebClient.builder().baseUrl("https://nominatim.openstreetmap.org")
                 .clientConnector(new ReactorClientHttpConnector(httpClient)).build();
@@ -129,9 +129,9 @@ public class OsmServiceImpl implements OsmService {
     }
 
     private Flux<JsonNode> saveFluxData(Flux<JsonNode> jsonNodeFlux) {
-        return jsonNodeFlux.flatMap(item -> Mono.just(item)
-                        .doOnNext(this::saveLocationEntity)
-                        .onErrorResume(NotSupportedOsmDataException.class::isInstance
+            return jsonNodeFlux.flatMap(item ->saveLocationEntity(item)
+                            .thenReturn(item)
+                            .onErrorResume(NotSupportedOsmDataException.class::isInstance
                                 , throwable -> {
                                     LOG.info("Found error while trying to process request");
                                     ErrorResponseDto errorResponse = ErrorResponseDto.builder()
@@ -140,12 +140,11 @@ public class OsmServiceImpl implements OsmService {
                                             .build();
                                     return Mono.just(objectMapper.valueToTree(errorResponse));
                                 })
-                        .onErrorStop()
                 )
                 .onErrorContinue((throwable, o) -> LOG.info("On Error Continue {}", o));
     }
 
-    private void saveLocationEntity(JsonNode locationData) {
+    private Mono<LocationDocument> saveLocationEntity(JsonNode locationData) {
         if (!AppUtils.checkOsmNodeType.test(locationData)) {
             throw new NotSupportedOsmDataException("Server Currently Accepting only OSM types of "
                     + SUPPORTED_OSM_TYPE + " received of type " + locationData.get(OSM_TYPE).asText(""));
@@ -155,7 +154,9 @@ public class OsmServiceImpl implements OsmService {
         document.setDisplayName(locationData.get(DISPLAY_NAME).asText());
         document.setGeoData(new GeoJsonPoint(locationData.get(LON).asDouble(), locationData.get(LAT).asDouble()));
         document.setCreatedDate(LocalDateTime.now());
-        locationRepository.save(document)
-                .subscribe(savedDocument -> LOG.info("Document saved is {}", savedDocument), error -> LOG.error("Error while saving the document", error));
+        return locationRepository.save(document)
+                .doOnNext(saved -> LOG.info("Data saved into db with id {}",saved.getId()))
+                .doOnError(error -> LOG.error("Found error while trying to save data into db",error));
+
     }
 }

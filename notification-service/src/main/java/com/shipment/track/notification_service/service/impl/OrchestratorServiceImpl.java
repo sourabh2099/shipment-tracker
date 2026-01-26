@@ -25,10 +25,12 @@ import java.util.function.Predicate;
 
 @Service
 public class OrchestratorServiceImpl implements OrchestratorService {
+
     private static final Logger LOG = LoggerFactory.getLogger(OrchestratorServiceImpl.class);
     private final PriorityAssignmentStrategy priorityAssignmentStrategy;
     private final Validator<NotificationMessage> validator;
     volatile Queue<NotificationMessage> queue = MessageQueue.getInstance().getNotificationQueue();
+
     @Autowired
     private ClientCounterRepository clientCounterRepository;
     @Autowired

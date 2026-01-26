@@ -25,14 +25,13 @@ public interface OfficeLocationRepository extends ReactiveCrudRepository<OfficeL
                    coordinates: [?0, ?1]
                  },
                  distanceField: \"distanceBetween\",
-                 maxDistance: 100000,
-                 query: {officeType : ?2 },
+                 query: {officeType : "?2" },
                  spherical: true
                }
              }
             """)
-    Flux<Document> findOfficeLocationByCoordinatesAndType(Long longitude,
-                                                          Long latitude,
+    Flux<Document> findOfficeLocationByCoordinatesAndType(Double longitude,
+                                                          Double latitude,
                                                           String officeType);
 
     @Aggregation("""
@@ -49,5 +48,5 @@ public interface OfficeLocationRepository extends ReactiveCrudRepository<OfficeL
              }
             """)
     Flux<Document> findOfficeLocationByCoordinates(Long longitude,
-                                                          Long latitude);
+                                                   Long latitude);
 }

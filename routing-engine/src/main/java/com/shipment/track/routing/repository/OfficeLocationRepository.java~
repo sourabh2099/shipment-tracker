@@ -1,0 +1,29 @@
+package com.shipment.track.routing.repository;
+
+import com.shipment.track.routing.document.OfficeLocationDocument;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.Aggregation;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
+
+@Repository
+public interface OfficeLocationRepository extends ReactiveMongoRepository<OfficeLocationDocument, ObjectId> {
+
+    @Aggregation("""
+            {
+                $geoNear: {
+                  near: {
+                    type: "Point",
+                    coordinates: [?0,?1]
+                  },
+                  distanceField: "distanceBetween",
+                  spherical: boolean                }
+              }
+            """)
+    Flux<Document> getOfficePathDistances(Double longitude, Double latitude);
+
+}

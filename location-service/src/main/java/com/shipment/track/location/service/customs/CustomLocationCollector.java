@@ -4,7 +4,6 @@ import com.shipment.track.location.service.utils.enums.OsmQueryParams;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
