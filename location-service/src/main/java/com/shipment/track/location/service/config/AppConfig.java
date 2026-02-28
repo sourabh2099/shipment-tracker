@@ -11,7 +11,7 @@ public class AppConfig extends AbstractReactiveMongoConfiguration {
     @Bean
     public ReactiveMongoClientFactoryBean mongoConfig() {
         ReactiveMongoClientFactoryBean bean = new ReactiveMongoClientFactoryBean();
-        bean.setConnectionString("mongodb://localhost:27017/location-service");
+        bean.setConnectionString("mongodb://localhost:27017/" + getDatabaseName());
 //        bean.setMongoClientSettings(MongoClientSettings.builder()
 //                .addCommandListener()
 //                        .credential(MongoCredential.createCredential())

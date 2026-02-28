@@ -1,3 +1,6 @@
+springdoc:
+  show-actuator: true
+
 locationService:
   config:
     check-property: hello-world

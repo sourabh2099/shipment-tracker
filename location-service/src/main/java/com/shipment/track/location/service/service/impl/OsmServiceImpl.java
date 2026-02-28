@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -113,7 +114,7 @@ public class OsmServiceImpl implements OsmService {
                 .uri(uriBuilder ->
                         uriBuilder.path("/search")
                                 .queryParams(locationQueryParams).build()
-                )
+                ).header(HttpHeaders.USER_AGENT,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36")
                 .exchangeToFlux(clientResponse -> {
                             LOG.info("Request made to {} and statusCode {}"
                                     , clientResponse.request().getURI(), clientResponse.statusCode());

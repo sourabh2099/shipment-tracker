@@ -1,4 +1,9 @@
 /notification-service/target/
 /shipment-tracker-pojo/target/
+/location-service/target/
+/routing-engine/target/
+/shiment-api-cloud-gateway/target/
+/shipment-eureka-server/target/
+/shipment-tracker-config-server/target/
 /.idea
 
