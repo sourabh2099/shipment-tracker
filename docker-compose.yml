@@ -1,13 +1,27 @@
 version: '3.8'
 
 services:
-  app:
+  location-service:
     build:
       context: ./
       dockerfile: location-service/Dockerfile
     container_name: location-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
     ports:
       - 8080:8080
+    networks:
+      - app-network
+    restart: unless-stopped
+  notification-service:
+    build:
+      context: ./
+      dockerfile: notification-service/Dockerfile
+    container_name: notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    ports:
+      - 8081:8081
     networks:
       - app-network
     restart: unless-stopped

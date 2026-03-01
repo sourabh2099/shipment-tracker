@@ -9,7 +9,9 @@ locationService:
       collection-name: office-location-document
       spatial-index-field-name: officeCoordinates
     pickup-radius: 10000 # in meters or 10 km
-
+  data:
+    mongodb:
+      uri: mongodb://host.docker.internal:27017/
 logging:
   level:
     org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG

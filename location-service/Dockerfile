@@ -13,27 +13,27 @@ COPY location-service/pom.xml location-service/
 COPY shipment-tracker-config-server/pom.xml shipment-tracker-config-server/
 COPY routing-engine/pom.xml routing-engine/
 
-RUN mvn install -N -DskipTests -B
+RUN mvn install -N -DskipTests
 
 COPY shipment-tracker-pojo/src shipment-tracker-pojo/src
-RUN mvn -f shipment-tracker-pojo/ install -DskipTests -B
+RUN mvn -f shipment-tracker-pojo/ install -DskipTests
 
-RUN mvn dependency:go-offline -pl location-service -B
+RUN mvn dependency:go-offline -pl location-service
 
 COPY location-service/src location-service/src
-RUN mvn -f location-service/ install -DskipTests -B
+RUN mvn -f location-service/ install -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine AS layers
 
 WORKDIR /app
 
-RUN ls -la /app/ || echo "app dir empty"
-
 COPY --from=builder /app/location-service/target/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
+RUN ls -la /app/ || echo "app dir empty"
+
 # RUN
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre-alpine as runner
 WORKDIR /app
 
 RUN addgroup -S spring && adduser -S spring -G spring
@@ -44,4 +44,4 @@ COPY --from=layers /app/spring-boot-loader ./
 COPY --from=layers /app/snapshot-dependencies/ ./
 COPY --from=layers /app/application/ ./
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
